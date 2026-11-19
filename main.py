@@ -10,7 +10,7 @@ from groq import Groq
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "qwen/qwen3.8-27b"
 
 RSS_URLS = [
     ("National", "https://www.thehindu.com/news/national/feeder/default.rss"),
@@ -184,6 +184,7 @@ INSTRUCTIONS:
                 max_tokens=900,
             )
             text = (chat_completion.choices[0].message.content or "").strip()
+            text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL | re.IGNORECASE).strip()
             if text:
                 return text
             last_error = "Empty response from Groq"
